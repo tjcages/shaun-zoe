@@ -8,6 +8,8 @@ import Sky from "./_Sky";
 import Sun from "./_Sun";
 import Land from "./_Land";
 import AirPlane from "./_Airplane";
+import Person from "./_Person";
+import Text from "./_Text";
 
 const _ = () => {
   var scene = null as THREE.Scene | null;
@@ -20,6 +22,8 @@ const _ = () => {
   var sky = null as THREE.Object3D | null;
   var sun = null as THREE.Object3D | null;
   var forest = null as THREE.Object3D | null;
+  var leo = null as THREE.Object3D | null;
+  var text = null as THREE.Group | null;
 
   const offSet = -600;
 
@@ -57,6 +61,14 @@ const _ = () => {
       alpha: true,
       antialias: true,
     });
+    // Define the size of the renderer - full screen
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(WIDTH, HEIGHT);
+
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
+
+    renderer.setPixelRatio(window.devicePixelRatio);
 
     // Set the size of the renderer to fullscreen
     renderer.setSize(WIDTH, HEIGHT);
@@ -106,9 +118,12 @@ const _ = () => {
 
   function loop() {
     if (!airplane || !land || !sky || !forest) return;
-    land.rotation.z += 0.0025;
-    sky.rotation.z += 0.0015;
-    forest.rotation.z += 0.0025;
+    land.rotation.z += 0.00125;
+    sky.rotation.z += 0.00075;
+    forest.rotation.z += 0.00125;
+
+    // rotate nyc around position (0, 0, 0)
+    if (text) text.rotation.z += 0.00125;
 
     if (!renderer || !scene || !camera || !airplane) return;
     renderer.render(scene, camera);
@@ -150,11 +165,38 @@ const _ = () => {
 
   function createPlane() {
     airplane = AirPlane();
-    airplane.scale.set(0.35, 0.35, 0.35);
-    airplane.position.set(-40, 110, -250);
+    airplane.scale.set(0.25, 0.25, 0.25);
+    airplane.position.set(0, 110, -50);
 
     if (!scene || !airplane) return;
     scene.add(airplane);
+  }
+
+  function createLeo() {
+    leo = Person("leo");
+    leo.scale.set(1.5, 1.5, 1.5);
+    leo.position.set(0, 110, -500);
+
+    if (!scene || !leo) return;
+    scene.add(leo);
+  }
+
+  async function createText() {
+    text = new THREE.Group();
+
+    const nyc = await Text("NYC");
+    nyc.position.set(30, offSet/2, -400);
+    nyc.rotation.z = Math.PI;
+
+    text.add(nyc);
+
+    const co = await Text("CO");
+    co.position.set(-30, -offSet/2, -400);
+
+    text.add(co);
+
+    if (!scene || !text) return;
+    scene.add(text);
   }
 
   useEffect(() => {
@@ -165,6 +207,8 @@ const _ = () => {
     createSun();
     createLand();
     createForest();
+    createLeo();
+    createText();
 
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps

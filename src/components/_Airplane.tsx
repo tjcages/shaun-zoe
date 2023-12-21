@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import { Colors } from "@/shared";
 
+import Person from "./_Person";
+
 const _ = () => {
   var mousePos = { x: 0, y: 0 };
 
@@ -145,6 +147,18 @@ const _ = () => {
   suspension.rotation.z = -0.3;
   mesh.add(suspension);
 
+  const zoe = Person("zoe");
+  zoe.position.set(-30, 30, 50);
+  zoe.rotation.z = 0.3;
+  zoe.scale.set(1.2, 1.2, 1.2);
+  mesh.add(zoe);
+
+  const shaun = Person("shaun");
+  shaun.position.set(50, 80, 60);
+  shaun.rotation.z = -0.3;
+  shaun.scale.set(0.5, 0.5, 0.5);
+  mesh.add(shaun);
+
   function handleMouseMove(event: { clientX: number; clientY: number; }) {
     const tx = -1 + (event.clientX / window.innerWidth) * 2;
     const ty = 1 - (event.clientY / window.innerHeight) * 2;
@@ -162,7 +176,7 @@ const _ = () => {
 
   function updatePlane() {
     const targetY = normalize(mousePos.y, -0.75, 0.75, 50, 190);
-    const targetX = normalize(mousePos.x, -0.75, 0.75, -100, -20);
+    const targetX = normalize(mousePos.x, -0.75, 0.75, -50, 50);
 
     // Move the plane at each frame by adding a fraction of the remaining distance
     mesh.position.y += (targetY - mesh.position.y) * 0.1;
