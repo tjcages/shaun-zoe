@@ -184,14 +184,14 @@ const _ = () => {
   async function createText() {
     text = new THREE.Group();
 
-    const nyc = await Text("NYC");
-    nyc.position.set(30, offSet/2, -400);
+    const nyc = (await Text("NYC")) as THREE.Mesh;
+    nyc.position.set(30, offSet / 2, -400);
     nyc.rotation.z = Math.PI;
 
     text.add(nyc);
 
-    const co = await Text("CO");
-    co.position.set(-30, -offSet/2, -400);
+    const co = (await Text("CO")) as THREE.Mesh;
+    co.position.set(-30, -offSet / 2, -400);
 
     text.add(co);
 
